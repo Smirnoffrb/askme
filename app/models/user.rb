@@ -13,6 +13,8 @@ class User < ApplicationRecord
 
   validates :header_color, format: { with: VALID_HEADER_REGEXP }
 
+  has_many :questions, dependent: :delete_all
+
   private
 
   def downcase_nickname

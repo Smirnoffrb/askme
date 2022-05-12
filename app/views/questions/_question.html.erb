@@ -2,20 +2,29 @@
   <%= question.body %>
 </div>
 
+<% if question.answer.present? %>
+  <div class="mb-sm text-dark-red">
+    <%= question.answer %>
+  </div>
+<% end %>
+
 <div class="text-sm question-footer">
   <div class="text-grey">
     <%= l(question.created_at, format: :short) %>
   </div>
 
-  <div>
-    <% unless question.hidden? %>
-      <%= button_to fa_icon('eye-slash'), hide_question_path(question), method: :patch, title: 'Скрыть вопрос' %>
-    <% end %>
+  <% if current_user == question.user %>
+    <div>
+      <% edit_icon = (question.answer.present? ? 'pencil' : 'reply') %>
+      <% unless question.hidden? %>
+        <%= button_to fa_icon('eye-slash'), hide_question_path(question), method: :patch, title: 'Скрыть вопрос', class: 'mr-sm' %>
+      <% end %>
 
-    <%= link_to fa_icon("pencil"), edit_question_path(question),
-      title: "Изменить вопрос" %>
-    <%= button_to fa_icon("trash-o"), question_path(question),
-      method: :delete, form: { data: { turbo_confirm: "Точно удалить вопрос?" } },
-        title: "Удалить вопрос" %>
-  </div>
+      <%= link_to fa_icon(edit_icon), edit_question_path(question),
+        title: "Изменить вопрос", class: 'mr-sm' %>
+      <%= button_to fa_icon("trash-o"), question_path(question),
+        method: :delete, form: { data: { turbo_confirm: "Точно удалить вопрос?" } },
+          title: "Удалить вопрос" %>
+    </div>
+  <% end %>
 </div>
